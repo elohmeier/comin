@@ -37,10 +37,10 @@ func getExpectedMachineId(path, hostname string) (machineId string, err error) {
 		return
 	}
 	if machineIdPtr != nil {
-		logrus.Debugf("Getting comin.machineId = %s", *machineIdPtr)
+		logrus.Debugf("nix: getting comin.machineId = %s", *machineIdPtr)
 		machineId = *machineIdPtr
 	} else {
-		logrus.Debugf("Getting comin.machineId = null (not set)")
+		logrus.Debugf("nix: getting comin.machineId = null (not set)")
 		machineId = ""
 	}
 	return

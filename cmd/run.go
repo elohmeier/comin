@@ -3,11 +3,14 @@ package cmd
 import (
 	"os"
 	"path"
+	"time"
 
+	"github.com/nlewo/comin/internal/builder"
 	"github.com/nlewo/comin/internal/config"
 	"github.com/nlewo/comin/internal/fetcher"
 	"github.com/nlewo/comin/internal/http"
 	"github.com/nlewo/comin/internal/manager"
+	"github.com/nlewo/comin/internal/nix"
 	"github.com/nlewo/comin/internal/prometheus"
 	"github.com/nlewo/comin/internal/repository"
 	"github.com/nlewo/comin/internal/scheduler"
@@ -61,7 +64,9 @@ var runCmd = &cobra.Command{
 		sched := scheduler.New()
 		sched.FetchRemotes(fetcher, cfg.Remotes)
 
-		manager := manager.New(repository, store, metrics, sched, fetcher, gitConfig.Path, gitConfig.Dir, cfg.Hostname, machineId)
+		builder := builder.New(cfg.Hostname, 5*time.Minute, nix.Eval, 30*time.Minute, nix.Build)
+
+		manager := manager.New(repository, store, metrics, sched, fetcher, builder, gitConfig.Path, gitConfig.Dir, cfg.Hostname, machineId)
 		// go poller.Poller(manager, cfg.Remotes)
 		http.Serve(manager,
 			metrics,

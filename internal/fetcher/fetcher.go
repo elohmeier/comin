@@ -27,6 +27,17 @@ func (f *Fetcher) TriggerFetch(remotes []string) {
 	f.submitRemotes <- remotes
 }
 
+type State struct {
+	IsFetching bool
+}
+
+// FIXME: make it thread safe
+func (f *Fetcher) State() State {
+	return State{
+		IsFetching: f.IsFetching,
+	}
+}
+
 func (f *Fetcher) Start() {
 	logrus.Info("fetcher: starting")
 	go func() {
